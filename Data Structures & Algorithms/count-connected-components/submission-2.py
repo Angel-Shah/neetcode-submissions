@@ -1,0 +1,29 @@
+class DSU:
+    def __init__(self,n):
+        self.parent =[i for i in range(n)]
+        self.rank = [1]*n
+    
+    def find(self,n):
+        if self.parent[n] != n:
+            self.parent[n] = self.find(self.parent[n])
+        return self.parent[n]
+    def union(self,n1,n2):
+        p1,p2 = self.find(n1),self.find(n2)
+        if p1 == p2:
+            return False
+        if self.rank[p1] > self.rank[p2]:
+            self.rank[p1] += self.rank[p2]
+            self.parent[p2] = p1
+        else:
+            self.rank[p2] += self.rank[p1]
+            self.parent[p1] = p2
+        return True
+class Solution:
+    def countComponents(self, n: int, edges: List[List[int]]) -> int:
+        dsu = DSU(n)
+        res = n
+        for to,frm in edges:
+            if dsu.union(to,frm):
+                res -= 1
+        return res
+        
